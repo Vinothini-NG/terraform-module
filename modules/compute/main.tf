@@ -13,6 +13,34 @@ data "oci_core_images" "oracle_linux" {
   sort_order = "DESC"
 }
 
+resource "oci_core_instance" "bastion_host" {
+  availability_domain = data.oci_identity_availability_domains.ads.availability_domains[0].name
+  compartment_id      = var.compartment_ocid
+  display_name        = "bastion-host-tf-github"
+  shape               = "VM.Standard.E5.Flex"
+
+  shape_config {
+    ocpus         = 1
+    memory_in_gbs = 12
+  }
+
+  create_vnic_details {
+    subnet_id        = var.public_subnet_id
+    assign_public_ip = true
+    display_name     = "bastion-vnic"
+    hostname_label   = "bastionhost"
+  }
+
+  source_details {
+    source_type = "image"
+    source_id   = data.oci_core_images.oracle_linux.images[0].id
+  }
+
+  metadata = {
+    ssh_authorized_keys = var.ssh_public_key
+    }
+}
+
 resource "oci_core_instance" "application_node1" {
 
   availability_domain = data.oci_identity_availability_domains.ads.availability_domains[0].name
@@ -42,38 +70,15 @@ resource "oci_core_instance" "application_node1" {
   }
 }
 
-resource "oci_core_instance" "bastion_host" {
-  availability_domain = data.oci_identity_availability_domains.ads.availability_domains[0].name
-  compartment_id      = var.compartment_ocid
-  display_name        = "bastion-host-tf-github"
-  shape               = "VM.Standard.E5.Flex"
-
-  shape_config {
-    ocpus         = 1
-    memory_in_gbs = 12
-  }
-
-  create_vnic_details {
-    subnet_id        = var.public_subnet_id
-    assign_public_ip = true
-    display_name     = "bastion-vnic"
-    hostname_label   = "bastionhost"
-  }
-
-  source_details {
-    source_type = "image"
-    source_id   = data.oci_core_images.oracle_linux.images[0].id
-  }
-
-  metadata = {
-    ssh_authorized_keys = var.ssh_public_key
-    }
-}
-
 resource "null_resource" "bastion_to_private_test" {
 
+    triggers = {
+    always_run = timestamp()
+  }
+
   depends_on = [
-    oci_core_instance.bastion_host
+    oci_core_instance.bastion_host,
+    oci_core_instance.application_node1
   ]
 
   connection {
@@ -88,7 +93,10 @@ resource "null_resource" "bastion_to_private_test" {
       "hostname",
       "whoami",
       "ping -c 1 google.com",
-      "mkdir -p ~/.ssh"
+      "mkdir -p ~/.ssh",
+      "cat > ~/.ssh/private_key <<'EOF'\n${var.ssh_private_key}\nEOF",
+      "chmod 600 ~/.ssh/private_key",
+      "ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 -i ~/.ssh/private_key opc@${oci_core_instance.application_node1.private_ip} 'echo CONNECTED && hostname && date && ping -c 3 google.com'",
     ]
   }
 }
