@@ -1,7 +1,7 @@
 resource "oci_database_autonomous_database" "autonomous_db_tf" {
   compartment_id = var.compartment_ocid
   display_name   = "autonomous-db-tf-github"
-  db_name        = "MYADBTF"
+  db_name        = "MYADBTF2"
   db_workload    = "OLTP"
 
   admin_password = var.adb_admin_password
