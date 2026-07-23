@@ -13,3 +13,14 @@ variable "ssh_private_key" {
   type        = string
   sensitive   = true
 }
+variable "adb_admin_password" {
+  description = "Admin password for Autonomous Database"
+  type        = string
+  sensitive   = true
+}
+
+variable "wallet_password" {
+  description = "Password for Autonomous Database Wallet"
+  type        = string
+  sensitive   = true
+}
