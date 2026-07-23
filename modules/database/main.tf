@@ -35,7 +35,7 @@ resource "null_resource" "wallet_upload" {
 
   provisioner "local-exec" {
     command = <<-EOT
-      echo "${oci_database_autonomous_database_wallet.adb_wallet.content}" | base64 -d > /tmp/wallet.zip
+      echo "${var.wallet_content}" | base64 -d > /tmp/wallet.zip
       oci os object put \
         --namespace ${data.oci_objectstorage_namespace.ns.namespace} \
         --bucket-name ${oci_objectstorage_bucket.tf_bucket.name} \
