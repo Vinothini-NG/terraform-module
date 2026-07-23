@@ -1,4 +1,4 @@
-#CREATE BASTION HOST
+/*CREATE BASTION HOST
 data "oci_identity_availability_domains" "ads" {
   compartment_id = var.tenancy_ocid
 }
@@ -39,4 +39,4 @@ resource "oci_core_instance" "bastion_host" {
   metadata = {
     ssh_authorized_keys = var.ssh_public_key
     }
-}
+}*/
