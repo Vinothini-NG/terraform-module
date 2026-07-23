@@ -21,9 +21,9 @@ module "database" {
   wallet_password    = var.wallet_password
 }
 
-/*module "loadbalancer" {
+module "loadbalancer" {
   source = "../modules/loadbalancer"
   compartment_ocid = var.compartment_ocid
   public_subnet_id = module.network.public_subnet_id
   backend_ip = module.compute.application_node1_private_ip
-}*/
+}
