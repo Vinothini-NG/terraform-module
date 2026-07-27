@@ -453,4 +453,4 @@ resource "oci_core_image" "application_node1_custom_image" {
   depends_on = [
     oci_core_instance.application_node1
   ]
-}
+} 
