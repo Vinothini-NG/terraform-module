@@ -26,7 +26,7 @@ resource "oci_objectstorage_bucket" "tf_bucket" {
   storage_tier   = "Standard"
 }
 
-/*resource "null_resource" "wallet_upload" {
+resource "null_resource" "wallet_upload" {
   depends_on = [oci_objectstorage_bucket.tf_bucket]
 
   triggers = {
@@ -44,7 +44,7 @@ resource "oci_objectstorage_bucket" "tf_bucket" {
         --force
     EOT
   }
-}*/
+}
 
 resource "oci_objectstorage_preauthrequest" "wallet_par" {
   namespace    = data.oci_objectstorage_namespace.ns.namespace
