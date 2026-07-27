@@ -12,6 +12,7 @@ module "compute" {
   ssh_public_key   = var.ssh_public_key
   ssh_private_key  = var.ssh_private_key
   wallet_content = module.database.wallet_content
+  adb_admin_password = var.adb_admin_password
 }
 
 module "database" {

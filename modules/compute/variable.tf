@@ -14,3 +14,7 @@ variable "wallet_content" {
   type      = string
   sensitive = true
 }
+variable "adb_admin_password" {
+  type      = string
+  sensitive = true
+}
