@@ -70,7 +70,7 @@ resource "oci_core_instance" "application_node1" {
   }
 }
 
-resource "null_resource" "bastion_to_private_test" {
+/*resource "null_resource" "bastion_to_private_test" {
   triggers = {
     always_run = timestamp()
   }
@@ -439,7 +439,7 @@ resource "null_resource" "bastion_to_private_test" {
       "ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key opc@${oci_core_instance.application_node1.private_ip} 'sudo systemctl is-active --quiet httpd'"
     ]
   }
-}
+}*/
 
 #CREATE CUSTOM IMAGE OF APP NODE1
 resource "oci_core_image" "application_node1_custom_image" {
