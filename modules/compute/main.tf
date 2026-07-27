@@ -94,8 +94,15 @@ resource "null_resource" "bastion_to_private_test" {
       "cat > ~/.ssh/private_key <<'EOF'\n${var.ssh_private_key}\nEOF",
       "chmod 600 ~/.ssh/private_key",
 
-      # Connectivity test
-      "ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 -i ~/.ssh/private_key opc@${oci_core_instance.application_node1.private_ip} 'echo CONNECTED && hostname && date' > /tmp/connectivity_result.txt 2>&1; echo $? > /tmp/connectivity_exit_code.txt",
+      # Connectivity test — retry, since the app node's sshd may not be up yet right after boot
+      "SSH_RC=1",
+      "for i in $(seq 1 18); do",
+      "  ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 -i ~/.ssh/private_key opc@${oci_core_instance.application_node1.private_ip} 'echo CONNECTED && hostname && date' > /tmp/connectivity_result.txt 2>&1",
+      "  SSH_RC=$?",
+      "  if [ $SSH_RC -eq 0 ]; then break; fi",
+      "  sleep 10",
+      "done",
+      "echo $SSH_RC > /tmp/connectivity_exit_code.txt",
 
       # httpd install
       "ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 -i ~/.ssh/private_key opc@${oci_core_instance.application_node1.private_ip} 'sudo yum install -y httpd 2>&1' > /tmp/httpd_install.txt 2>&1; echo $? > /tmp/httpd_install_exit.txt",
