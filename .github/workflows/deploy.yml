@@ -62,7 +62,7 @@ jobs:
         run: terraform plan
        
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -replace="module.compute.oci_core_instance.bastion_host"
 
       - name: Show Terraform State
         run: terraform state list
