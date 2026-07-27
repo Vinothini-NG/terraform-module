@@ -25,7 +25,7 @@ resource "oci_objectstorage_bucket" "tf_bucket" {
   access_type    = "NoPublicAccess"
   storage_tier   = "Standard"
 }
-/*
+
 resource "null_resource" "wallet_upload" {
   depends_on = [oci_objectstorage_bucket.tf_bucket]
 
@@ -59,4 +59,3 @@ resource "oci_objectstorage_preauthrequest" "wallet_par" {
 output "wallet_par_url" {
   value = "https://objectstorage.ap-sydney-1.oraclecloud.com${oci_objectstorage_preauthrequest.wallet_par.access_uri}"
 }
-*/
