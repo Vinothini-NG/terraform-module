@@ -11,6 +11,7 @@ variable "ssh_private_key" {
   sensitive   = true
 }
 variable "wallet_content" {
+  default   = ""
   type      = string
   sensitive = true
 }
