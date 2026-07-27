@@ -11,7 +11,6 @@ module "compute" {
   private_subnet_id = module.network.private_subnet_id
   ssh_public_key   = var.ssh_public_key
   ssh_private_key  = var.ssh_private_key
-  wallet_content = module.database.wallet_content
 }
 
 module "database" {
